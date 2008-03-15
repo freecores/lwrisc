@@ -702,7 +702,7 @@ FILE*fpi ;
 /*  Well.. Let's read stuff in completely before outputting.. Programs */
 /*  should be pretty small.. */
 /*  */
-#define MAX_MEMORY_SIZE 1024
+#define MAX_MEMORY_SIZE 4096
 struct 
 {
 int nAddress ;
@@ -939,10 +939,8 @@ int main(int argc,char*argv[])
             
     fpi=fopen(mif_fn,"w");
     
-    
-    
+    /*output deasm filr*/
     strcpy(mif_fn,"Dasm.txt");
-    
     fpi=fopen(mif_fn,"w");
     for(i=0;i<nMemoryCount;i++)
     {
@@ -955,7 +953,7 @@ int main(int argc,char*argv[])
     //   getchar();
     
         
-    strcpy(mif_fn,"alt_mem_set.h");
+    strcpy(mif_fn,"rom_set.h");
  
     fpi=fopen(mif_fn,"w");
     for(i=0;i<nMemoryCount;i++)
@@ -970,10 +968,11 @@ int main(int argc,char*argv[])
        // fprintf(fpi,"mem[%d] = %d;\n",
     }
     addr_wdt = func1(max);
-      fprintf(fpi,"`define     ALT_MEM_WIDTHAD   %d\n",addr_wdt);
-      fprintf(fpi,"`define     ALT_MEM_NUMWORDS  %d\n",1<<addr_wdt); 
-        fprintf(fpi,"`define      MIF_NAME  %s\n\n","init_file.mif");  
-    
+    //  fprintf(fpi,"`define     ALT_MEM_WIDTHAD   %d\n",addr_wdt);
+   //   fprintf(fpi,"`define     ALT_MEM_NUMWORDS  %d\n",1<<addr_wdt); 
+   //   `define      MIF_NAME  %s\n\n","init_file.mif");  
+    fprintf(fpi,"`define    ROM_TYPE  rom%dx12\n\n",1<<func1(max));
+ 
     close(fpi);
     //   getchar();
 }
