@@ -246,17 +246,18 @@ module ClaiRISC_core (
                 endcase
             end
 
-    always @(*) begin
+
+		  		always @(*) begin
         casex (w_ins) 
 
-            12'b0000_001X_XXXX:
+            12'b0000_001X_XXXX:		   //Checked 2008_11_22
                 //REPLACE ID = MOVWF
                 //REPLACE ID = MOVWF
             begin
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_IGN;
+                w_muxb_ctl = `MUXB_IGN;		  //check 2008_11_22
                 w_alu_op = `ALU_PA;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -272,7 +273,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_IGN;
+                w_muxb_ctl = `MUXB_IGN;		 //check 2008_11_22
                 w_alu_op = `ALU_ZERO;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -288,7 +289,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_IGN;
+                w_muxb_ctl = `MUXB_IGN;	    //check 2008_11_22
                 w_alu_op = `ALU_ZERO;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -304,7 +305,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;	    //check 2008_11_22
                 w_alu_op = `ALU_SUB;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -320,7 +321,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		  //check 2008_11_22
                 w_alu_op = `ALU_SUB;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -336,7 +337,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		  //check 2008_11_22
                 w_alu_op = `ALU_DEC;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -353,7 +354,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		  //check 2008_11_22
                 w_alu_op = `ALU_DEC;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -369,7 +370,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_EK;
+                w_muxb_ctl = `MUXB_REG;	// `MUXB_EK;			 //fixed 2008_11_22
                 w_alu_op = `ALU_OR;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -387,7 +388,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_EK;
+                w_muxb_ctl = `MUXB_REG;	// `MUXB_EK;			 //fixed 2008_11_22
                 w_alu_op = `ALU_OR;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -403,7 +404,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_EK;
+                w_muxb_ctl =`MUXB_REG;// `MUXB_EK;			 //fixed 2008_11_22
                 w_alu_op = `ALU_AND;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -419,7 +420,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_EK;
+                w_muxb_ctl =`MUXB_REG;// `MUXB_EK;			 //fixed 2008_11_22
                 w_alu_op = `ALU_AND;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -435,7 +436,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;	    //check 2008_11_22
                 w_alu_op = `ALU_XOR;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -451,7 +452,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;	   //check 2008_11_22
                 w_alu_op = `ALU_XOR;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -467,7 +468,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		 //check 2008_11_22
                 w_alu_op = `ALU_ADD;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -499,7 +500,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;	   //check 2008_11_22
                 w_alu_op = `ALU_PB;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -516,7 +517,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		  //check 2008_11_22
                 w_alu_op = `ALU_PB;
                 w_mem_wr = `DIS;//Also can be set as EN
                 w_w_wr = `DIS;
@@ -532,7 +533,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		//check 2008_11_22
                 w_alu_op = `ALU_COM;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -548,7 +549,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		   //check 2008_11_22
                 w_alu_op = `ALU_COM;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -564,7 +565,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		//check 2008_11_22
                 w_alu_op = `ALU_INC;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -580,7 +581,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		 //check 2008_11_22
                 w_alu_op = `ALU_INC;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -596,7 +597,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;			  //check 2008_11_22
                 w_alu_op = `ALU_DEC;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -612,7 +613,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		   //check 2008_11_22
                 w_alu_op = `ALU_DEC;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -629,7 +630,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;			//check 2008_11_22
                 w_alu_op = `ALU_ROR;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -646,7 +647,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;	  //check 2008_11_22
                 w_alu_op = `ALU_ROR;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -663,7 +664,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;	 //check 2008_11_22
                 w_alu_op = `ALU_ROL;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -679,7 +680,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;	   //check 2008_11_22
                 w_alu_op = `ALU_ROL;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -695,7 +696,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		//check 2008_11_22
                 w_alu_op = `ALU_SWAP;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -711,7 +712,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		//check 2008_11_22
                 w_alu_op = `ALU_SWAP;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -727,7 +728,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;	   //check 2008_11_22
                 w_alu_op = `ALU_INC;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -743,7 +744,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;	  //check 2008_11_22
                 w_alu_op = `ALU_INC;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -759,7 +760,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_BD;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		 //check 2008_11_22
                 w_alu_op = `ALU_BCF;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -775,7 +776,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_BD;
-                w_muxb_ctl = `MUXB_REG;
+                w_muxb_ctl = `MUXB_REG;		//check 2008_11_22
                 w_alu_op = `ALU_BSF;
                 w_mem_wr = `EN;
                 w_w_wr = `DIS;
@@ -793,7 +794,7 @@ module ClaiRISC_core (
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_BD;
                 w_muxb_ctl = `MUXB_REG;
-                w_alu_op = `ALU_BTFSC;//ALU_BTFSC
+                w_alu_op = `ALU_BTFSC;      //check 2008_11_22
                 w_mem_wr = `DIS;
                 w_w_wr = `DIS;
                 w_z_wr = `DIS;
@@ -824,7 +825,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_POP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_EK;
+                w_muxb_ctl = `MUXB_EK;			   //check 2008_11_22
                 w_alu_op = `ALU_PB;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -840,7 +841,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_GOTO;
                 w_stk_op = `STK_PSH;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_IGN;
+                w_muxb_ctl = `MUXB_IGN;		 //check 2008_11_22
                 w_alu_op = `ALU_NOP;
                 w_mem_wr = `DIS;
                 w_w_wr = `DIS;
@@ -856,7 +857,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_GOTO;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_IGN;
+                w_muxb_ctl = `MUXB_IGN;	   //check 2008_11_22
                 w_alu_op = `ALU_NOP;
                 w_mem_wr = `DIS;
                 w_w_wr = `DIS;
@@ -872,7 +873,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_EK;
+                w_muxb_ctl = `MUXB_EK;	  //check 2008_11_22
                 w_alu_op = `ALU_PB;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -888,7 +889,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_EK;
+                w_muxb_ctl = `MUXB_EK;	//check 2008_11_22
                 w_alu_op = `ALU_OR;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -904,7 +905,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_EK;
+                w_muxb_ctl = `MUXB_EK;	//check 2008_11_22
                 w_alu_op = `ALU_AND;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -920,7 +921,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_W;
-                w_muxb_ctl = `MUXB_EK;
+                w_muxb_ctl = `MUXB_EK;	  //check 2008_11_22
                 w_alu_op = `ALU_XOR;
                 w_mem_wr = `DIS;
                 w_w_wr = `EN;
@@ -936,7 +937,7 @@ module ClaiRISC_core (
                 w_pc_gen_ctl = `PC_NEXT;
                 w_stk_op = `STK_NOP;
                 w_muxa_ctl = `MUXA_IGN;
-                w_muxb_ctl = `MUXB_IGN;
+                w_muxb_ctl = `MUXB_IGN;	  //check 2008_11_22
                 w_alu_op = `ALU_NOP;
                 w_mem_wr = `DIS;
                 w_w_wr = `DIS;

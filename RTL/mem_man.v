@@ -35,8 +35,8 @@ module wb_mem_man(
         input [7:0] din	   ,
         output reg [7:0]status     ,
 
-        input  [6:0] rd_addr,
-        input  [6:0] wr_addr ,
+        input  [7:0] rd_addr, //[6:0]Should be also OK,For there is only 128byte RAM
+        input  [7:0] wr_addr , //[6:0]Should be also OK,For there is only 128byte RAM
 
         input  [7:0] in0,
         input  [7:0] in1,
@@ -44,8 +44,8 @@ module wb_mem_man(
         output reg [7:0] out1
     );
     reg wr_en_r;
-    reg [6:0] din_r, wr_addr_r;
-    reg [6:0] rd_addr_r;
+    reg [7:0] din_r, wr_addr_r;
+    reg [7:0] rd_addr_r;
 
     always @(posedge clk)
     begin  //used to bypass the data
