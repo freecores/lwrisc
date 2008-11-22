@@ -16,7 +16,7 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
-
+void add_ins(char *ins);
 int func1(int in)
 {
 const int table[]={1,2,4,8,16,32,64,128,256,512,1024,2048};
