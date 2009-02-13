@@ -15,7 +15,7 @@
 `include "clairisc_def.h"
 `include "rom_set.h"
 
-module pram (
+module com_prom (
         clk,
         rd_addr,
         dout
