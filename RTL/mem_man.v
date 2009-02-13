@@ -1,74 +1,70 @@
-/******************************************************************
- *                                                                * 
- *    Author: Liwei                                               * 
- *                                                                * 
- *    This file is part of the "ClaiRISC" project,                *
- *    The folder in CVS is named as "lwrisc"                      * 
- *    Downloaded from:                                            * 
- *    http://www.opencores.org/pdownloads.cgi/list/lwrisc         * 
- *                                                                * 
- *    If you encountered any problem, please contact me via       * 
- *    Email:mcupro@opencores.org  or mcupro@163.com               * 
- *                                                                * 
- ******************************************************************/
-
+ 
 `include "clairisc_def.h"
-			  
-`define ADDR_FSR                   4
+			  											    
 `define ADDR_STATUS                3	   
-`define ADDR_IN0               5	 
-`define ADDR_IN1               1
-`define ADDR_OUT0                6	 	
-`define ADDR_OUT1                7				  
+`define ADDR_DVC_DATA              0 
+`define ADDR_DVC_WR_ADDR           2
+`define ADDR_DVC_RD_ADDR           1	
 
-module wb_mem_man(
+/*
+#define    PORT_DATA        *(unsigned char*)0 
+#define    IN_PORT_ADDR     *(unsigned char*)1 
+#define    OUT_PORT_ADDR    *(unsigned char*)2 
+#define    STATUS           *(unsigned char*)3 
+*/
+
+module  mem_man(
         input wr_en,
         input clk,
-        input rst,
+        input rst,	 
+		
         input ci,
         input zi,
         input z_wr,
         input c_wr,
-        output reg [7:0] dout,
+        
+		output reg [7:0] dout,
         output co,
-        output [1:0] bank,
         input [7:0] din	   ,
         output reg [7:0]status     ,
 
-        input  [7:0] rd_addr, //[6:0]Should be also OK,For there is only 128byte RAM
-        input  [7:0] wr_addr , //[6:0]Should be also OK,For there is only 128byte RAM
+        input  [4:0] rd_addr,  
+        input  [4:0] wr_addr , 
+ 
+	output reg [7:0]dvc_wr_addr,
+	output reg [7:0]dvc_rd_addr,
+	output reg  [7:0]data_mem2dvc,
+	input [7:0]data_dvc2mem,
+	output reg dvc_wr	,
+	output /*reg */dvc_rd	
+);		  
 
-        input  [7:0] in0,
-        input  [7:0] in1,
-        output reg [7:0] out0,
-        output reg [7:0] out1
-    );
+	
     reg wr_en_r;
-    reg [7:0] din_r, wr_addr_r;
-    reg [7:0] rd_addr_r;
+    reg [7:0] din_r;
+	reg [4:0] wr_addr_r;
+    reg [4:0] rd_addr_r;
 
     always @(posedge clk)
-    begin  //used to bypass the data
-        //which wrote anf then be read in the followwing period
+    begin  
         wr_addr_r<=wr_addr;
         rd_addr_r<=rd_addr;
         wr_en_r<=wr_en;
         din_r<=din;
-    end
-
+    end			  
+	
     wire [7:0] ram_q ;
     wire [7:0] alt_ram_q;
 
-    `ifdef SIM
-
+ //   `ifdef SIM	
     sim_reg_file i_reg_file(
                      .data(din),
                      .wren(wr_en),
-                     .wraddress(wr_addr),
-                     .rdaddress(rd_addr),
+                     .wraddress(wr_addr[4:0]),
+                     .rdaddress(rd_addr[4:0]),
                      .clock(clk),
                      .q(alt_ram_q));
-    `else
+ /*   `else	
     ram128x8 i_reg_file(
                  .data(din),
                  .wren(wr_en),
@@ -76,10 +72,10 @@ module wb_mem_man(
                  .rdaddress(rd_addr),
                  .clock(clk),
                  .q(alt_ram_q)
-             );
+             );	
     `endif
-
-    assign ram_q = ((wr_addr_r==rd_addr_r)&&(wr_en_r))?din_r:alt_ram_q;
+  */
+    assign ram_q =/* ((wr_addr_r==rd_addr_r)&&(wr_en_r))?din_r:*/alt_ram_q;
 
     /*status register*/
     wire write_status = wr_addr[4:0] ==`ADDR_STATUS && wr_en;
@@ -91,62 +87,34 @@ module wb_mem_man(
             else
             begin
                 if (c_wr)status[0]<=ci;
-                if (z_wr)status[2]<=zi;
+				if (z_wr)status[2]<=zi;
             end
-    end
-
+    end		
+			
     assign co = status[0];
 
-    `ifdef SIM 	   
-    
-    wire write_disp = wr_addr == 'h1f && wr_en;
-    always@(posedge clk)
+    `ifdef SIM 	 						    
+    always@(*)
     begin
-        if (write_disp)
-            $display("hex=>%x< char=>%c<",din,din);
+        if (wr_en)
+            $display("hex=>%x< char=>%x<",wr_addr[4:0],din[7:0]);
     end
-    `endif 	
-
-    /*fsr register*/
-    reg [7:0] fsr;
-    assign bank = fsr[6:5];
-    wire write_fsr = wr_addr[4:0] == `ADDR_FSR &&wr_en ;
-    always@(posedge clk)
-    begin
-        if (rst)fsr<=0;
-        else  if(write_fsr) fsr<=din[7:0];
-    end
-
-    /*latch the input data*/
-    reg [7:0]	 reg_in1,reg_in0;
-    always@(posedge clk) reg_in0<=in0;
-    always@(posedge clk) reg_in1<=in1;
-
-    /*data output latch */
-    wire write_out0 = wr_addr[4:0] == `ADDR_OUT0 &&wr_en ;
-    always@(posedge clk)
-    begin
-        if (rst)out0<=0;
-        else  if(write_out0)out0<=din[7:0];
-    end
-
-    /*data output latch */
-    wire write_out1 = wr_addr[4:0] == `ADDR_OUT1 &&wr_en ;
-    always@(posedge clk)
-    begin
-        if (rst)out1<=0;
-        else  if(write_out1)out1<=din[7:0];
-    end
-
-    /*data bus output select logic*/
-    always@(*)//select status,fsr,wb_data,ram,wb_din
-    case(rd_addr_r[4:0])
-        `ADDR_FSR:dout    = fsr;
-        `ADDR_STATUS:dout = status;
-        `ADDR_IN0:dout    = reg_in0;
-        `ADDR_IN1:dout    = reg_in1;
+    `endif 		  
+	
+    always@(*) 
+    case(rd_addr_r[4:0])			   
+		`ADDR_STATUS:dout = status;			    	  
+	   	`ADDR_DVC_DATA :dout  = data_dvc2mem ;
         default dout = ram_q ;
-    endcase
+    endcase			 	  
+	
+	always @ (posedge clk) if ((wr_addr[4:0]==`ADDR_DVC_WR_ADDR)&&(1==wr_en))dvc_wr_addr <=din;		
+	always @ (posedge clk)	if ((wr_addr[4:0]==`ADDR_DVC_RD_ADDR)&&(1==wr_en))  dvc_rd_addr <=din;	
+	always @ (posedge clk) if ((wr_addr[4:0]==`ADDR_DVC_DATA )&&(1==wr_en)) data_mem2dvc <=din;	  
+	always	@ (*) dvc_wr  <=wr_en_r&(wr_addr==0);
+	assign  dvc_rd   =	1'b1  ;					  			  
+	
+ 
 endmodule
 
 

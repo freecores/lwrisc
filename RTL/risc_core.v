@@ -1,25 +1,14 @@
-/******************************************************************
- *                                                                * 
- *    Author: Liwei                                               * 
- *                                                                * 
- *    This file is part of the "ClaiRISC" project,                *
- *    The folder in CVS is named as "lwrisc"                      * 
- *    Downloaded from:                                            * 
- *    http://www.opencores.org/pdownloads.cgi/list/lwrisc         * 
- *                                                                * 
- *    If you encountered any problem, please contact me via       * 
- *    Email:mcupro@opencores.org  or mcupro@163.com               * 
- *                                                                * 
- ******************************************************************/
 
 `include "clairisc_def.h"
 module ClaiRISC_core (
         input clk,
-        input rst		,
-        input [7:0] in0,
-        input [7:0] in1,
-        output [7:0] out0,
-        output [7:0] out1
+        input rst,	 
+	output [7:0]dvc_wr_addr,
+	output [7:0]dvc_rd_addr,
+	output  [7:0]data_mem2dvc,
+	input [7:0]data_dvc2mem,   
+	output dvc_wr  ,
+	output dvc_rd 
     );
     
     supply0 GND;
@@ -35,15 +24,15 @@ module ClaiRISC_core (
     reg w_reg_muxb_r;
     reg w_skip;
     reg w_w_wr;
-    reg w_w_wr_r;
-    wire w_z;
+    reg w_w_wr_r; 
+	wire w_z;
     reg w_z_wr;
     reg w_z_wr_r;
     reg [7:0] w_alu_in_a;
     reg [7:0] w_alu_in_b;
     reg [4:0] w_alu_op;
     reg [4:0] w_alu_op_r;
-    reg [7:0] w_alu_res;
+    reg [7:0] w_alu_res;  
     wire [1:0] w_bank;
     reg [7:0] w_bd_r;
     reg [1:0] w_brc_ctl;
@@ -54,100 +43,109 @@ module ClaiRISC_core (
     reg [10:0] w_pc;
     reg [2:0] w_pc_gen_ctl;
     reg [10:0] w_pc_nxt;
-    wire [6:0] w_rd_addr;
+    wire [4:0] w_rd_addr;
     wire [7:0] w_status;
     reg [1:0] w_stk_op;
     wire [10:0] w_stk_pc;
     reg[4:0] w_wbadd_r;
     wire [4:0] w_wd_addr;
     reg [7:0] w_wreg;
-    wire [6:0] w_wr_addr;
+    wire [4:0] w_wr_addr;
 
     always @(posedge clk)
         w_pc<=w_pc_nxt;
         
-    reg	[10:0]	stack1, stack2, stack3, stack4;
+    reg	[10:0]	stack1, stack2,stack3, stack4;	 
+	
+	initial	begin 
+	stack1=0;
+	stack2=0;
+	stack3=0;
+	stack4=0;
+	end		
+	
     assign w_stk_pc = stack1;
 
     always @(posedge clk)
     begin
         case (w_stk_op)
             `STK_PSH	:// PUSH stack
-            begin
+            begin	  
                 stack4 <= stack3;
-                stack3 <= stack2;
+                stack3 <= stack2;	
                 stack2 <= stack1;
-                stack1 <= w_pc;
+                stack1 <= w_pc+1;
             end
             `STK_POP	:// POP stack
             begin
-                stack1 <= stack2;
-                stack2 <= stack3;
-                stack3 <= stack4;
-            end
+                stack1 <= stack2;	   
+				stack2 <= stack3;
+                stack3 <= stack4;   
+			end
             //  default ://do nothing
         endcase
     end
     
-    assign	   w_rd_addr ={ w_bank[1:0],w_wd_addr[4:0]};
+    assign	   w_rd_addr =w_wd_addr[4:0];
 
-    wb_mem_man   mem_man
-                 (
-                     .bank(w_bank),
+    mem_man   mem_man
+                 (					   
                      .c_wr(w_c_wr_r),
                      .ci(w_c_2mem),
                      .clk(clk),
                      .co(w_c_2alu),
                      .din(w_alu_res),
                      .dout(w_file_o),
-                     .rd_addr(w_rd_addr),
+                     .rd_addr(w_rd_addr[4:0]),
                      .rst(rst),
                      .status(w_status),
-                     .wr_addr(w_wr_addr),
+                     .wr_addr(w_wr_addr[4:0]),
                      .wr_en(w_mem_wr_r),
                      .z_wr(w_z_wr_r),
-                     .zi(w_z),
-                     .in0(in0),
-                     .in1(in1),
-                     .out0(out0),
-                     .out1(out1)
+                     .zi(w_z),		 
+					 .dvc_wr_addr(dvc_wr_addr),
+	                 .dvc_rd_addr(dvc_rd_addr),
+	                 .data_mem2dvc(data_mem2dvc),
+	                 .data_dvc2mem(data_dvc2mem),   
+	                 .dvc_wr(dvc_wr),
+					 .dvc_rd(dvc_rd)
                  );
 
-    always @(posedge clk)
-        if (w_skip==1)
+    always @(posedge clk)	 
+        if (w_skip)
             w_alu_op_r<=0;
         else
             w_alu_op_r<=w_alu_op;
 
     always@(posedge clk)
-        if (w_skip==1)	  w_br_ctl_r<=0;
+        if (w_skip)	  w_br_ctl_r<=0;
         else w_br_ctl_r<=w_brc_ctl;
 
     always@(posedge clk)
-        if (w_skip==1)	  w_z_wr_r<=0;
+        if (w_skip)	  w_z_wr_r<=0;
         else  w_z_wr_r<=w_z_wr;
 
     always @ (posedge clk)
-        if (w_skip==1)
+        if (w_skip)
             w_c_wr_r<=0;
         else
             w_c_wr_r<=w_c_wr;
 
     always @(posedge clk)
-        if(w_skip==1)
+        if(w_skip)
             w_mem_wr_r<=0;
-        else
+        else					   
             w_mem_wr_r<=w_mem_wr;
  
     always @(posedge clk)
-        if (w_w_wr_r==1)
+        if (w_w_wr_r)
             w_wreg<=w_alu_res;
 	  		   
 	always @ (posedge clk)  
 		w_bd_r<=1<<w_ins[7:5];
 
-    always @(posedge clk)
-        w_w_wr_r <=w_w_wr ;
+    always @(posedge clk)			 
+		w_w_wr_r <=w_w_wr ;
 
     always @(posedge clk)
         w_ek_r<=w_ins[8:0];
@@ -156,10 +154,9 @@ module ClaiRISC_core (
 
     always@(posedge clk)
         w_wbadd_r<=w_wd_addr;
+														   
 
-    assign w_wr_addr = {w_bank[1:0],w_wbadd_r[4:0]};
-
-
+	   assign w_wr_addr =  w_wbadd_r[4:0];
     reg		addercout;
     always @(*) begin
         case (w_alu_op_r) // synsys parallel_case
@@ -218,14 +215,13 @@ module ClaiRISC_core (
         //then skip the next instruction
         default w_skip = 0;
     endcase
-
-
-    pram program_rom
+					  
+com_prom program_rom
          (
              .clk(clk),
              .dout(w_ins),
              .rd_addr(w_pc_nxt)
-         );
+         );	  
 
     always @ (*)
         if (rst)
@@ -239,15 +235,15 @@ module ClaiRISC_core (
             begin
                 case(w_pc_gen_ctl)
                     `PC_GOTO,
-                    `PC_CALL: 	 w_pc_nxt= {w_status[7:6],w_ins[8:0]};
-                    `PC_RET:	w_pc_nxt= w_stk_pc;
+                    `PC_CALL: 	w_pc_nxt= w_ins[7:0];//{w_status[7:6],1'b0,w_ins[7:0]};
+                    `PC_RET :	w_pc_nxt= w_stk_pc;
                     default
                     w_pc_nxt= w_pc+1;
                 endcase
             end
 
 
-		  		always @(*) begin
+	always @(*) begin
         casex (w_ins) 
 
             12'b0000_001X_XXXX:		   //Checked 2008_11_22
@@ -822,7 +818,7 @@ module ClaiRISC_core (
                 //REPLACE ID = RETLW
                 //REPLACE ID = RETLW
             begin
-                w_pc_gen_ctl = `PC_NEXT;
+                w_pc_gen_ctl = `PC_RET ;
                 w_stk_op = `STK_POP;
                 w_muxa_ctl = `MUXA_IGN;
                 w_muxb_ctl = `MUXB_EK;			   //check 2008_11_22
@@ -946,6 +942,5 @@ module ClaiRISC_core (
                 w_brc_ctl = `BG_NOP;
             end //end of NOP ;
         endcase
-    end
-
+    end	
 endmodule

@@ -55,7 +55,7 @@ static volatile       unsigned char	WB_DATA		@ 0x05;
 static volatile       unsigned char	WB_CTL		@ 0x06;*/
 static char reg_name[30];
 char*find_reg(unsigned int t)
-{
+{/*
     //puts(&ins[7]);
     if(t==0)
     {
@@ -75,11 +75,13 @@ char*find_reg(unsigned int t)
         strcpy(reg_name,"PCL");
         return reg_name ;
     }
-    else if(t-3==0)
+    
+    else
+    */ if(t-3==0)
     {
         strcpy(reg_name,"STATUS");
         return reg_name ;
-    }
+    }/*
     else if(t==0+4)
     {
         strcpy(reg_name,"FSR");
@@ -102,6 +104,7 @@ char*find_reg(unsigned int t)
         strcpy(reg_name,"PORTC");
         return reg_name ;
     }
+    */
     return NULL ;
 }
 
@@ -171,7 +174,7 @@ unsigned int gen_ins_goto(char*ins)
     if(ins[11-5]=='1')t+=32;//1<<5 ;
     if(ins[11-6]=='1')t+=64;//1<<6 ;
     if(ins[11-7]=='1')t+=128;//1<<7 ;
-    if(ins[11-8]=='1')t+=256;//1<<8 ;
+   // if(ins[11-8]=='1')t+=256;//1<<8 ;
     return t ;
 }
 
@@ -862,7 +865,7 @@ int main(int argc,char*argv[])
         fprintf(fpi,"%4X : %4X;\n",Memory[i].nAddress,Memory[i].byData);
     }
     
-    fprintf(fpi,"\END;\n");
+    fprintf(fpi,"\nEND;\n");
     printf("\END;\n");
     close(fpi);
     /*output simulate verilog code */
@@ -953,9 +956,9 @@ int main(int argc,char*argv[])
     //   getchar();
     
         
-    strcpy(mif_fn,"rom_set.h");
+  //  strcpy(mif_fn,"rom_set.h");
  
-    fpi=fopen(mif_fn,"w");
+   // fpi=fopen(mif_fn,"w");
     for(i=0;i<nMemoryCount;i++)
     {
     if ((Memory[i].nAddress==2047)&&(Memory[i-1].nAddress!=2046))continue;
@@ -971,9 +974,9 @@ int main(int argc,char*argv[])
     //  fprintf(fpi,"`define     ALT_MEM_WIDTHAD   %d\n",addr_wdt);
    //   fprintf(fpi,"`define     ALT_MEM_NUMWORDS  %d\n",1<<addr_wdt); 
    //   `define      MIF_NAME  %s\n\n","init_file.mif");  
-    fprintf(fpi,"`define    ROM_TYPE  rom%dx12\n\n",1<<func1(max));
+//    fprintf(fpi,"`define    ROM_TYPE  rom%dx12\n\n",1<<func1(max));
  
-    close(fpi);
+   // close(fpi);
     //   getchar();
 }
 
